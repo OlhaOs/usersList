@@ -1,23 +1,53 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import List from './components/List';
+import Button from './components/Button';
+import Image from './components/Images';
 import './App.css';
 
+const BASE_URL = ' https://jsonplaceholder.typicode.com';
+
 function App() {
+  const [users, setUsers] = useState([]);
+  const [album, setAlbum] = useState([]);
+  const [photos, setPhotos] = useState([]);
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/users`)
+      .then(response => response.json())
+      .then(data => {
+        setUsers(data);
+      });
+  }, []);
+
+  const handleAlbumBtnClick = id => {
+    fetch(`${BASE_URL}/albums`)
+      .then(response => response.json())
+      .then(data => {
+        setAlbum(data.filter(item => item.userId === id));
+        setPhotos([]);
+      });
+  };
+  const handlePhotosDtnlick = id => {
+    fetch(`${BASE_URL}/photos`)
+      .then(response => response.json())
+      .then(data => {
+        setPhotos(data.filter(item => item.albumId === id));
+      });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      <List list={users}>
+        <Button handleClick={handleAlbumBtnClick} btnName={'Album'} />
+      </List>
+
+      <List list={album}>
+        <Button handleClick={handlePhotosDtnlick} btnName={'Photos'} />
+      </List>
+
+      <List list={photos}>
+        <Image />
+      </List>
     </div>
   );
 }
