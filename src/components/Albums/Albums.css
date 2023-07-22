@@ -1,0 +1,18 @@
+.listAlbum {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+
+  width: 50%;
+  list-style: none;
+}
+.goBackBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  cursor: pointer;
+}
+.loader {
+  margin-top: 50px;
+}

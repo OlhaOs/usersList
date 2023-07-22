@@ -1,53 +1,94 @@
 import { useEffect, useState } from 'react';
-import List from './components/List';
-import Button from './components/Button';
-import Image from './components/Images';
+import { Routes, Route } from 'react-router-dom';
+import Users from './components/Users';
+import Albums from './components/Albums';
+import Photos from './components/Photos';
+import { useFetchHook } from 'usefetch_simple_hook';
 import './App.css';
 
 const BASE_URL = ' https://jsonplaceholder.typicode.com';
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [album, setAlbum] = useState([]);
+  const [albums, setAlbums] = useState([]);
   const [photos, setPhotos] = useState([]);
+  const {
+    data: usersData,
+    loading: usersLoading,
+    error: usersError,
+    doFetch: fetchUsers,
+  } = useFetchHook();
+
+  const {
+    data: albumsData,
+    loading: albumsLoading,
+    error: albumsEalbumsLoadingrror,
+    doFetch: fetchAlbums,
+  } = useFetchHook();
+
+  const {
+    data: photosData,
+    loading: photosLoading,
+    error: photosError,
+    doFetch: fetchPhotos,
+  } = useFetchHook();
 
   useEffect(() => {
-    fetch(`${BASE_URL}/users`)
-      .then(response => response.json())
-      .then(data => {
-        setUsers(data);
-      });
+    fetchUsers(`${BASE_URL}/users`);
   }, []);
 
   const handleAlbumBtnClick = id => {
-    fetch(`${BASE_URL}/albums`)
-      .then(response => response.json())
-      .then(data => {
-        setAlbum(data.filter(item => item.userId === id));
-        setPhotos([]);
-      });
+    fetchAlbums(`${BASE_URL}/albums?userId=${id}`);
   };
-  const handlePhotosDtnlick = id => {
-    fetch(`${BASE_URL}/photos`)
-      .then(response => response.json())
-      .then(data => {
-        setPhotos(data.filter(item => item.albumId === id));
-      });
+  const handlePhotosBtnClick = id => {
+    fetchPhotos(`${BASE_URL}/photos?albumId=${id}`);
   };
+
+  useEffect(() => {
+    if (usersData) {
+      setUsers(usersData);
+    }
+    if (albumsData) {
+      setAlbums(albumsData);
+      setPhotos([]);
+    }
+    if (photosData) {
+      setPhotos(photosData);
+    }
+  }, [usersData, albumsData, photosData]);
 
   return (
     <div className='container'>
-      <List list={users}>
-        <Button handleClick={handleAlbumBtnClick} btnName={'Album'} />
-      </List>
-
-      <List list={album}>
-        <Button handleClick={handlePhotosDtnlick} btnName={'Photos'} />
-      </List>
-
-      <List list={photos}>
-        <Image />
-      </List>
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <Users
+              list={users}
+              handleClick={handleAlbumBtnClick}
+              loading={usersLoading}
+              error={usersError}
+            />
+          }
+        />
+        <Route
+          path='/albums/:userId'
+          element={
+            <Albums
+              list={albums}
+              handleClick={handlePhotosBtnClick}
+              loading={albumsLoading}
+              error={albumsEalbumsLoadingrror}
+            />
+          }
+        />
+        <Route
+          path='/photos/:albumId'
+          element={
+            <Photos list={photos} loading={photosLoading} error={photosError} />
+          }
+        />
+      </Routes>
     </div>
   );
 }

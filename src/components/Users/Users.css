@@ -1,0 +1,25 @@
+.listUser {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-top: 37px;
+  
+    width: 50%;
+  }
+  .listItem {
+    display: flex;
+    justify-content: space-between;
+  
+    margin-bottom: 10px;
+  }
+  .btn {
+    width: 100px;
+    cursor: pointer;
+  }
+  .goBackBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    cursor: pointer;
+  }

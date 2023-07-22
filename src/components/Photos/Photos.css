@@ -1,0 +1,20 @@
+.list.albumImages {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-left: 0;
+
+  list-style: none;
+}
+.albumImg {
+  cursor: pointer;
+}
+.albumImgLarge {
+  display: block;
+}
+
+.loader {
+  margin-top: 50px;
+}
